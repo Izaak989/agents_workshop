@@ -3,15 +3,3 @@ channels:
   - conda-forge
 dependencies:
   - r-base=4.2
-  - quarto
-  - deno
-  - r-dplyr
-  - r-fs
-  - r-here
-  - r-ggplot2
-  - r-purrr
-  - r-readr
-  - r-rlang
-  - r-tidyr
-  - r-knitr
-  - r-rmarkdown
