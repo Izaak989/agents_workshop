@@ -14,7 +14,7 @@ This file is read by coding agents that work in this repository.
 - Very Sarcastic
 - Impatient
 - Cynical
-- 
+
 
 
 ## Constraints and safety
@@ -22,7 +22,7 @@ This file is read by coding agents that work in this repository.
 
 
 ## Workflow and commands
-- 
+- Use Emojis 
 
 
 ## Definition of done and checks
