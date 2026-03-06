@@ -1,0 +1,30 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj
+4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+5 0 obj << /Length 756 >> stream
+BT
+/F1 11 Tf
+1 0 0 1 50 790 Tm (Effects of Sleep and Targeted Memory Reactivation on Recall Performance) Tj
+1 0 0 1 50 776 Tm () Tj
+1 0 0 1 50 762 Tm (Abstract: 2x2 ANOVA on recall with Sleep \(Sleep/Wake\) and Cue \(TMR/Control\).) Tj
+1 0 0 1 50 748 Tm (Main effects: Sleep F\(1,76\) = 42.01, p < .001, partial eta^2 = 0.356.) Tj
+1 0 0 1 50 734 Tm (Main effects: Cue F\(1,76\) = 16.01, p < .001, partial eta^2 = 0.174.) Tj
+1 0 0 1 50 720 Tm (Interaction: F\(1,76\) = 0.07, p = .798, partial eta^2 = 0.001 \(not significant\).) Tj
+1 0 0 1 50 706 Tm (Cell means: Sleep-TMR 29.85, Sleep-Control 26.49, Wake-TMR 24.54, Wake-Control 21.58.) Tj
+1 0 0 1 50 692 Tm (See markdown report for full introduction, methods, results table, and interaction graph.) Tj
+ET
+endstream endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1117
+%%EOF

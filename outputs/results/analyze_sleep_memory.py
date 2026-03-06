@@ -9,6 +9,7 @@ REPORT_PATH = ROOT / 'outputs/reports/apa7_sleep_memory_report.md'
 DESC_PATH = ROOT / 'outputs/results/sleep_memory_descriptives.csv'
 STATS_PATH = ROOT / 'outputs/results/sleep_memory_anova_results.txt'
 FIG_PATH = ROOT / 'outputs/figures/sleep_memory_interaction.svg'
+PDF_PATH = ROOT / 'outputs/reports/apa7_sleep_memory_report.pdf'
 
 # ----- Numeric helpers (no third-party dependencies) -----
 
@@ -279,12 +280,64 @@ svg.append(f'<text x="{lx+40}" y="{ly+28}" font-size="13">Wake</text>')
 svg.append('</svg>')
 FIG_PATH.write_text('\n'.join(svg))
 
+def _pdf_escape(text: str) -> str:
+    return text.replace('\\', '\\\\').replace('(', '\\(').replace(')', '\\)')
+
+
+def write_simple_pdf(path: Path, lines):
+    # Minimal one-page PDF writer using Helvetica.
+    content = ["BT", "/F1 11 Tf"]
+    y = 790
+    for line in lines:
+        content.append(f"1 0 0 1 50 {y} Tm ({_pdf_escape(line)}) Tj")
+        y -= 14
+        if y < 60:
+            break
+    content.append("ET")
+    stream = ("\n".join(content) + "\n").encode('latin-1', errors='replace')
+
+    objects = []
+    objects.append(b"1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n")
+    objects.append(b"2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n")
+    objects.append(b"3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj\n")
+    objects.append(b"4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n")
+    objects.append((f"5 0 obj << /Length {len(stream)} >> stream\n".encode('ascii') + stream + b"endstream endobj\n"))
+
+    pdf = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for obj in objects:
+        offsets.append(len(pdf))
+        pdf.extend(obj)
+    xref_start = len(pdf)
+    pdf.extend(f"xref\n0 {len(objects)+1}\n".encode('ascii'))
+    pdf.extend(b"0000000000 65535 f \n")
+    for off in offsets[1:]:
+        pdf.extend(f"{off:010d} 00000 n \n".encode('ascii'))
+    pdf.extend((
+        f"trailer << /Size {len(objects)+1} /Root 1 0 R >>\n"
+        f"startxref\n{xref_start}\n%%EOF\n"
+    ).encode('ascii'))
+    path.write_bytes(pdf)
+
+
 # Report markdown APA 7 style structure
 lines = []
 lines.append('# Effects of Sleep and Targeted Memory Reactivation on Recall Performance')
 lines.append('')
-lines.append('## Summary')
-lines.append('A 2 × 2 between-subjects analysis of variance (ANOVA) examined recall performance as a function of sleep condition (Sleep vs. Wake) and cue condition (TMR vs. Control). Results showed statistically significant main effects of sleep and cueing. The Sleep × Cue interaction was not statistically significant. Overall, recall was better after sleep than wakefulness, and recall was better with TMR than with control cueing.')
+lines.append('[Download PDF version](./apa7_sleep_memory_report.pdf)')
+lines.append('')
+lines.append('## Abstract')
+lines.append('This report presents a 2 × 2 between-subjects analysis of variance (ANOVA) examining memory recall as a function of sleep condition (Sleep vs. Wake) and cue condition (TMR vs. Control). Significant main effects of sleep and cue condition were observed, indicating higher recall after sleep and under TMR. The Sleep × Cue interaction was not statistically significant. Descriptive statistics and follow-up independent-samples comparisons are reported to support interpretation.')
+lines.append('')
+lines.append('## Introduction')
+lines.append('Sleep is often associated with improved consolidation of recently learned information. Targeted memory reactivation (TMR) has been proposed as an intervention that can further enhance consolidation by presenting memory-related cues. The current analysis evaluates whether recall differs as a function of sleep state, cue condition, and their interaction in a 2 × 2 factorial design.')
+lines.append('')
+lines.append('## Methods')
+lines.append('### Design and Data')
+lines.append('The dataset included 80 participants distributed evenly across four between-subjects cells (Sleep–TMR, Sleep–Control, Wake–TMR, Wake–Control; n = 20 per cell). The outcome variable was recall score.')
+lines.append('')
+lines.append('### Statistical Analysis')
+lines.append('A two-way between-subjects ANOVA tested main effects of sleep and cue condition and their interaction. Follow-up independent-samples *t* tests compared cue effects within sleep levels and sleep effects within cue levels. Partial η² is reported as effect size for ANOVA terms.')
 lines.append('')
 lines.append('## Results')
 lines.append(f'The main effect of sleep was significant, *F*({df_sleep}, {df_error}) = {f_sleep:.2f}, *p* {fmt_p(p_sleep)}, partial η² = {eta_sleep:.3f}. The main effect of cue was significant, *F*({df_cue}, {df_error}) = {f_cue:.2f}, *p* {fmt_p(p_cue)}, partial η² = {eta_cue:.3f}. The Sleep × Cue interaction was not statistically significant, *F*({df_interaction}, {df_error}) = {f_interaction:.2f}, *p* {fmt_p(p_interaction)}, partial η² = {eta_interaction:.3f}.')
@@ -302,8 +355,26 @@ lines.append('')
 lines.append('### Interaction Graph')
 lines.append('')
 lines.append('![Interaction graph for Sleep × Cue effects on recall](../figures/sleep_memory_interaction.svg)')
+lines.append('')
+lines.append('## Conclusion')
+lines.append('Recall performance was higher in Sleep than Wake and higher in TMR than Control, indicating reliable main effects of sleep and cueing. However, there was no evidence that the cueing effect differed by sleep state (non-significant interaction). These findings support additive benefits of sleep and TMR in this sample rather than a multiplicative interaction.')
 
 REPORT_PATH.write_text('\n'.join(lines))
+
+pdf_lines = [
+    'Effects of Sleep and Targeted Memory Reactivation on Recall Performance',
+    '',
+    'Abstract: 2x2 ANOVA on recall with Sleep (Sleep/Wake) and Cue (TMR/Control).',
+    'Main effects: Sleep F(1,76) = %.2f, p %s, partial eta^2 = %.3f.' % (f_sleep, fmt_p(p_sleep), eta_sleep),
+    'Main effects: Cue F(1,76) = %.2f, p %s, partial eta^2 = %.3f.' % (f_cue, fmt_p(p_cue), eta_cue),
+    'Interaction: F(1,76) = %.2f, p %s, partial eta^2 = %.3f (not significant).' % (f_interaction, fmt_p(p_interaction), eta_interaction),
+    'Cell means: Sleep-TMR %.2f, Sleep-Control %.2f, Wake-TMR %.2f, Wake-Control %.2f.' % (
+        mean(cells[('Sleep', 'TMR')]), mean(cells[('Sleep', 'Control')]),
+        mean(cells[('Wake', 'TMR')]), mean(cells[('Wake', 'Control')])
+    ),
+    'See markdown report for full introduction, methods, results table, and interaction graph.',
+]
+write_simple_pdf(PDF_PATH, pdf_lines)
 
 print('Analysis complete')
 print(f'ANOVA interaction p = {p_interaction:.6f}')
