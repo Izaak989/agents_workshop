@@ -1,0 +1,5 @@
+sleep,cue,n,mean,sd,se
+Sleep,TMR,20,29.8520,3.9155,0.8755
+Sleep,Control,20,26.4930,3.5778,0.8000
+Wake,TMR,20,24.5365,3.2208,0.7202
+Wake,Control,20,21.5820,3.3583,0.7509

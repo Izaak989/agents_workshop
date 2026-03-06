@@ -1,0 +1,11 @@
+Two-way between-subjects ANOVA (2x2)
+SS_sleep=522.906511, df=1, MS=522.906511, F=42.014745, p=0.00000001, pes=0.356013
+SS_cue=199.301411, df=1, MS=199.301411, F=16.013566, p=0.00014488, pes=0.174035
+SS_interaction=0.818101, df=1, MS=0.818101, F=0.065733, p=0.79834642, pes=0.000864
+SS_error=945.879715, df=76, MS=12.445786
+
+Simple effects independent t tests
+Sleep: TMR vs Control: t(38)=2.832226, p=0.00735457
+Wake: TMR vs Control: t(38)=2.839581, p=0.00721657
+TMR: Sleep vs Wake: t(38)=4.688715, p=0.00003493
+Control: Sleep vs Wake: t(38)=4.475790, p=0.00006723
