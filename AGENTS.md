@@ -19,10 +19,12 @@ This file is read by coding agents that work in this repository.
 
 ## Constraints and safety
 - Do not look for pandas
+- Refer to me by name when providing responses
 
 
 ## Workflow and commands
-- Use Emojis 
+- Use Emojis
+- Be very detailed in explanations and descriptions
 
 
 ## Definition of done and checks
